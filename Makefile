@@ -33,7 +33,7 @@ PREFIX_CMAKE = "-DCMAKE_INSTALL_PREFIX=$(ROOT_DIR)"
 ifeq ($(type), debug)
 TYPE_FLAGS = -g4 -O0
 else
-TYPE_FLAGS = -O3
+TYPE_FLAGS = -Oz
 endif
 
 # EMCC_CFLAGS = -g4 -O0 -fexceptions -DRENAME_INTERNAL_LIBTIFF_SYMBOLS
