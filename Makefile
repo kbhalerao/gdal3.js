@@ -59,7 +59,7 @@ $(DIST_DIR)/gdal3WebAssembly.js: $(ROOT_DIR)/lib/libgdal.a
 	cd $(DIST_DIR); \
 	EMCC_CORES=4 $(EMCC) $(ROOT_DIR)/lib/libgdal.a \
 		$(ROOT_DIR)/lib/libproj.a $(ROOT_DIR)/lib/libsqlite3.a $(ROOT_DIR)/lib/libz.a $(ROOT_DIR)/lib/libspatialite.a \
-		$(ROOT_DIR)/lib/libgeos.a $(ROOT_DIR)/lib/libgeos_c.a $(ROOT_DIR)/lib/libwebp.a $(ROOT_DIR)/lib/libsharpyuv.a $(ROOT_DIR)/lib/libwebpdemux.a \
+		$(ROOT_DIR)/lib/libgeos.a $(ROOT_DIR)/lib/libgeos_c.a \
 		$(ROOT_DIR)/lib/libexpat.a $(ROOT_DIR)/lib/libtiffxx.a $(ROOT_DIR)/lib/libtiff.a $(ROOT_DIR)/lib/libgeotiff.a \
         $(ROOT_DIR)/lib/libiconv.a \
 		-o $@ $(GDAL_EMCC_FLAGS) \
@@ -70,7 +70,7 @@ $(ROOT_DIR)/lib/libgdal.a: $(GDAL_SRC)/build/Makefile
 	cd $(GDAL_SRC)/build; \
 	$(EMMAKE) make -j4 install;
 
-$(GDAL_SRC)/build/Makefile: $(ROOT_DIR)/lib/libsqlite3.a $(ROOT_DIR)/lib/libproj.a $(ROOT_DIR)/lib/libgeotiff.a $(ROOT_DIR)/lib/libwebp.a $(ROOT_DIR)/lib/libexpat.a $(ROOT_DIR)/lib/libspatialite.a $(ROOT_DIR)/lib/libiconv.a $(ROOT_DIR)/include/linux/fs.h $(GDAL_SRC)/CMakeLists.txt
+$(GDAL_SRC)/build/Makefile: $(ROOT_DIR)/lib/libsqlite3.a $(ROOT_DIR)/lib/libproj.a $(ROOT_DIR)/lib/libgeotiff.a $(ROOT_DIR)/lib/libexpat.a $(ROOT_DIR)/lib/libspatialite.a $(ROOT_DIR)/lib/libiconv.a $(ROOT_DIR)/include/linux/fs.h $(GDAL_SRC)/CMakeLists.txt
 	cd $(GDAL_SRC); \
 	sed -i 's/ iconv_open/ libiconv_open/g' ./port/cpl_recode_iconv.cpp; \
     sed -i 's/        iconv/        libiconv/g' ./port/cpl_recode_iconv.cpp; \
@@ -80,9 +80,19 @@ $(GDAL_SRC)/build/Makefile: $(ROOT_DIR)/lib/libsqlite3.a $(ROOT_DIR)/lib/libproj
 	cd build; \
 	$(EMCMAKE) cmake .. $(PREFIX_CMAKE) -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_APPS=OFF \
-        -DOGR_ENABLE_DRIVER_GPSBABEL=OFF \
         -DCMAKE_PREFIX_PATH=$(ROOT_DIR) -DCMAKE_FIND_ROOT_PATH=$(ROOT_DIR) \
         -DGDAL_USE_HDF5=OFF -DGDAL_USE_HDFS=OFF -DACCEPT_MISSING_SQLITE3_MUTEX_ALLOC=ON \
+        -DGDAL_BUILD_OPTIONAL_DRIVERS=OFF \
+        -DOGR_BUILD_OPTIONAL_DRIVERS=OFF \
+        -DGDAL_ENABLE_DRIVER_PNG=ON \
+        -DGDAL_ENABLE_DRIVER_XYZ=ON \
+        -DGDAL_USE_JPEG_INTERNAL=ON \
+        -DGDAL_ENABLE_DRIVER_JPEG=ON \
+        -DGDAL_USE_PNG_INTERNAL=ON \
+        -DOGR_ENABLE_DRIVER_CSV=ON \
+        -DOGR_ENABLE_DRIVER_SQLITE=ON \
+        -DOGR_ENABLE_DRIVER_GPKG=ON \
+        -DGDAL_USE_WEBP=OFF \
         -DSQLite3_INCLUDE_DIR=$(ROOT_DIR)/include -DSQLite3_LIBRARY=$(ROOT_DIR)/lib/libsqlite3.a \
         -DPROJ_INCLUDE_DIR=$(ROOT_DIR)/include -DPROJ_LIBRARY_RELEASE=$(ROOT_DIR)/lib/libproj.a \
         -DTIFF_INCLUDE_DIR=$(ROOT_DIR)/include -DTIFF_LIBRARY_RELEASE=$(ROOT_DIR)/lib/libtiff.a \
@@ -90,7 +100,6 @@ $(GDAL_SRC)/build/Makefile: $(ROOT_DIR)/lib/libsqlite3.a $(ROOT_DIR)/lib/libproj
         -DZLIB_INCLUDE_DIR=$(ROOT_DIR)/include -DZLIB_LIBRARY_RELEASE=$(ROOT_DIR)/lib/libz.a \
         -DSPATIALITE_INCLUDE_DIR=$(ROOT_DIR)/include -DSPATIALITE_LIBRARY=$(ROOT_DIR)/lib/libspatialite.a \
         -DGEOS_INCLUDE_DIR=$(ROOT_DIR)/include -DGEOS_LIBRARY=$(ROOT_DIR)/lib/libgeos.a \
-        -DWEBP_INCLUDE_DIR=$(ROOT_DIR)/include -DWEBP_LIBRARY=$(ROOT_DIR)/lib/libwebp.a \
         -DEXPAT_INCLUDE_DIR=$(ROOT_DIR)/include -DEXPAT_LIBRARY=$(ROOT_DIR)/lib/libexpat.a \
         -DIconv_INCLUDE_DIR=$(ROOT_DIR)/include -DIconv_LIBRARY=$(ROOT_DIR)/lib/libiconv.a;
 
