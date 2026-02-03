@@ -3,7 +3,7 @@ GDAL_EMCC_FLAGS :=
 ifeq ($(type), debug)
 GDAL_EMCC_FLAGS += -g4 --source-map-base http://localhost:8080/dist/ -fsanitize=address
 else
-GDAL_EMCC_FLAGS += -O3
+GDAL_EMCC_FLAGS += -Oz
 endif
 
 GDAL_EMCC_FLAGS += -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s FORCE_FILESYSTEM=1
